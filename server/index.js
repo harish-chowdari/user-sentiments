@@ -17,6 +17,9 @@ app.use("/api", AuthRoutes)
 const OtpRouter = require("./Routes/OtpRoutes")
 app.use("/api", OtpRouter)
 
+const ReviewsRouter = require("./Routes/reviewRoutes")
+app.use("/api/reviews", ReviewsRouter)
+
 const port = process.env.PORT || 3000
 
 
