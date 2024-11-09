@@ -1,0 +1,13 @@
+.layout {
+    display: flex;
+    height: 100vh; 
+  }
+  
+  .contentArea {
+    flex: 1; 
+    padding: 0px;
+    margin-left: 200px;
+    background-color: #f9f9f9; 
+    overflow-y: auto; 
+  }
+  

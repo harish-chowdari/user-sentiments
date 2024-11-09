@@ -1,8 +1,9 @@
 import React from 'react'
+import styles from './Home.module.css'
 
 const Home = () => {
   return (
-    <div>Welcome to Home</div>
+    <div className={styles.home}>Welcome to Sentiment Analysis</div>
   )
 }
 

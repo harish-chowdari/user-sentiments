@@ -1,0 +1,82 @@
+.reviewAnalysis{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(170, 170, 245);
+    justify-content: center;
+}
+
+.upload{
+    display: flex;
+    margin-top: 50px;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f5f5f5;
+    font-size: 1.5rem;
+    gap: 1rem;
+}
+
+.upload, h3{
+    margin: 0px;
+    margin-top: 10px;
+}
+
+.reviewList{
+    padding-left: 50px;
+}
+
+
+.sentimentSections {
+    display: flex;
+    padding-left: 20px;
+    justify-content: space-around;
+  }
+
+  .heading {
+    margin: 0px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 18px;
+  }
+  
+  .positiveReviews {
+    background-color: #e0f7fa; 
+    padding: 10px;
+    border-radius: 5px;
+    width: 30%;
+    height: 40vh;
+    overflow-y: scroll;
+  }
+  
+  .neutralReviews {
+    background-color: #fff9c4; 
+    padding: 10px;
+    border-radius: 5px;
+    width: 30%;
+    height: 40vh;
+    overflow-y: scroll;
+  }
+  
+  .negativeReviews {
+    background-color: #ffebee; 
+    padding: 10px;
+    border-radius: 5px;
+    width: 30%;
+    height: 40vh;
+    overflow-y: scroll;
+  }
+  
+  .review {
+    margin-bottom: 10px;
+    background-color: white;
+    border-radius: 3px;
+    padding: 1px 10px;
+  }
+  
+
+  .pieChart{
+    padding-left: 20px;
+    padding-top: 20px;
+    width: 30%;
+    padding-bottom: 30px;
+    height: full;
+  }
