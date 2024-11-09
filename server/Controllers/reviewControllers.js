@@ -6,7 +6,7 @@ const sentiment = new Sentiment();
 
 
 function analyzeReviews(req, res) {
-    const reviewsFilePath = req?.files?.reviews;
+    const reviewsFilePath = req?.files?.reviews[0]?.path;
     let results = [];
 
     fs.createReadStream(reviewsFilePath)
