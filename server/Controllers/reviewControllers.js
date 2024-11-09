@@ -5,9 +5,14 @@ const Sentiment = require('sentiment');
 const sentiment = new Sentiment();
 
 
-function analyzeReviews(req, res) {
-    const reviewsFilePath = req?.files?.reviews[0]?.path;
+function analyzeReviews(req, res){
+    const reviewsFilePath = req?.files?.reviews[0]?.path; // Path to the uploaded reviews file
     let results = [];
+    let sentimentCounts = {
+        Positive: 0,
+        Negative: 0,
+        Neutral: 0
+    };
 
     fs.createReadStream(reviewsFilePath)
         .pipe(csv())
@@ -22,6 +27,9 @@ function analyzeReviews(req, res) {
             const analysis = sentiment.analyze(data['Summary']);
             const sentimentLabel = analysis.score > 0 ? 'Positive' : analysis.score < 0 ? 'Negative' : 'Neutral';
 
+            // Update the counts for each sentiment type
+            sentimentCounts[sentimentLabel]++;
+
             // Append the result to the list
             results.push({
                 UserId: data['UserId'],
@@ -31,7 +39,12 @@ function analyzeReviews(req, res) {
             });
         })
         .on('end', () => {
-            res.json(results); // Send the final results after processing all rows
+            // Include sentiment counts in the response
+            res.json({
+                results: {total_reviews: results.length,
+                sentiment_counts: sentimentCounts,
+                reviews: results}
+            });
         })
         .on('error', (err) => {
             res.status(500).json({ error: 'Error reading the CSV file.' });
