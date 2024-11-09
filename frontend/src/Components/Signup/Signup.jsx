@@ -5,9 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [signup, setSignup] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    mobile: "",
     password: "",
+    confirmPassword: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -27,6 +30,8 @@ const Signup = () => {
         setErrorMessage(res.data.EnterAllDetails);
       } else if (res.data.AlreadyExist) {
         setErrorMessage(res.data.AlreadyExist);
+      } else if (res.data.PasswordNotMatch) {
+        setErrorMessage(res.data.PasswordNotMatch);
       } else {
         const userId = res.data._id;
         navigate(`/home/${userId}`);
@@ -48,9 +53,19 @@ const Signup = () => {
           <input
             placeholder="Enter Your Name"
             type="text"
-            name="name"
+            name="firstName"
             onChange={handleChange}
-            value={signup.name}
+            value={signup.firstName}
+            className={styles.input}
+          />
+        </div>
+        <div>
+          <input
+            placeholder="Enter Your Last Name"
+            type="text"
+            name="lastName"
+            onChange={handleChange}
+            value={signup.lastName}
             className={styles.input}
           />
         </div>
@@ -66,11 +81,31 @@ const Signup = () => {
         </div>
         <div>
           <input
+            placeholder="Enter Your Mobile Number"
+            type="number"
+            name="mobile"
+            onChange={handleChange}
+            value={signup.mobile}
+            className={styles.input}
+          />
+        </div>
+        <div>
+          <input
             placeholder="Enter Your Password"
             type="password"
             name="password"
             onChange={handleChange}
             value={signup.password}
+            className={styles.input}
+          />
+        </div>
+        <div>
+          <input
+            placeholder="Confirm Your Password"
+            type="password"
+            name="confirmPassword"
+            onChange={handleChange}
+            value={signup.confirmPassword}
             className={styles.input}
           />
         </div>

@@ -2,7 +2,7 @@ const Schema = require("../Models/AuthenticationModel.js");
 
 async function SigUp(req, res) {
   try {
-    const { name, email, password } = req.body;
+    const { firstName, lastName, email, mobile, password, confirmPassword } = req.body;
 
     const isUserExist = await Schema.findOne({ email: email });
 
@@ -10,13 +10,19 @@ async function SigUp(req, res) {
       return res.status(200).json({ AlreadyExist: "Account already exists" });
     }
 
-    if (!name || !email || !password) {
+    if (password !== confirmPassword) {
+      return res.status(200).json({ PasswordNotMatch: "Passwords do not match" });
+    }
+
+    if (!firstName || !lastName || !email || !password || !confirmPassword || !mobile) {
       return res.status(200).json({ EnterAllDetails: "Please fill all the fields" });
     }
 
     const data = new Schema({
-      name,
+      firstName,
+      lastName,
       email,
+      mobile,
       password,
       otp: "",
       otpExpiresAt: "",
