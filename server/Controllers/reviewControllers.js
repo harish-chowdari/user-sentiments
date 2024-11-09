@@ -4,7 +4,6 @@ const csv = require('csv-parser');
 const Sentiment = require('sentiment');
 const sentiment = new Sentiment();
 
-const app = express();
 
 function analyzeReviews(req, res) {
     const reviewsFilePath = req?.files?.reviews;
