@@ -156,72 +156,83 @@ const [sentimentData, setSentimentData] = useState({});
 
     const generatePdf = () => {
         const doc = new jsPDF();
+        
+        // Capture the Pie chart
         html2canvas(chartRef.current).then((canvas) => {
-            const imgData = canvas.toDataURL("image/png");
-            doc.addImage(imgData, 'PNG', 10, 10, 190, 90);
-
+            const pieChartImgData = canvas.toDataURL("image/png");
+            doc.addImage(pieChartImgData, 'PNG', 10, 10, 190, 90); // Adjust dimensions as needed
+    
             if (pieChartData) {
                 const positivePercentage = ((pieChartData.Positive / reviewsCount) * 100).toFixed(2);
                 const negativePercentage = ((pieChartData.Negative / reviewsCount) * 100).toFixed(2);
                 const neutralPercentage = ((pieChartData.Neutral / reviewsCount) * 100).toFixed(2);
-
+    
                 doc.setFontSize(12);
                 doc.text(`Positive: ${positivePercentage}%`, 10, 100);
                 doc.text(`Negative: ${negativePercentage}%`, 10, 110);
                 doc.text(`Neutral: ${neutralPercentage}%`, 10, 120);
             }
-
-            
-
-            const addReviewsToPdf = (title, reviews) => {
-                doc.addPage();
-                doc.setFontSize(16);
-                doc.text(title, 10, 10);
+    
+            // Capture the Bar chart from the ResponsiveContainer
+            html2canvas(document.querySelector('.recharts-responsive-container')).then((canvas) => {
+                const barChartImgData = canvas.toDataURL("image/png");
+                doc.addImage(barChartImgData, 'PNG', 10, 130, 190, 90); // Adjust dimensions as needed
+    
+                // Add sentiment data (positive, negative, neutral) in the PDF
                 doc.setFontSize(12);
-
-                let yPosition = 20;
-                reviews.forEach((review) => {
-                    if (yPosition > 270) {
-                        doc.addPage();
-                        yPosition = 10;
+                doc.text("Product Sentiment Distribution", 10, 220);
+    
+                const addReviewsToPdf = (title, reviews) => {
+                    doc.addPage();
+                    doc.setFontSize(16);
+                    doc.text(title, 10, 10);
+                    doc.setFontSize(12);
+    
+                    let yPosition = 20;
+                    reviews.forEach((review) => {
+                        if (yPosition > 270) {
+                            doc.addPage();
+                            yPosition = 10;
+                        }
+                        doc.text(`Review: ${review.Summary}`, 10, yPosition);
+                        doc.text(`User ID: ${review.UserId}`, 10, yPosition + 5);
+                        yPosition += 10;
+                    });
+                };
+    
+                addReviewsToPdf("Positive Reviews", positiveSearchResult);
+                addReviewsToPdf("Negative Reviews", negativeSearchResult);
+                addReviewsToPdf("Neutral Reviews", neutralSearchResult);
+    
+                const pdfBlob = doc.output('blob');
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                
+                window.open(pdfUrl);
+    
+                const formData = new FormData();
+                formData.append("reviews", pdfBlob, "reviews.pdf");
+    
+                axios.post(
+                    `http://localhost:4003/api/reviews/addFile/${localStorage.getItem("userId")}`,
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
                     }
-                    doc.text(`Review: ${review.Summary}`, 10, yPosition);
-                    doc.text(`User ID: ${review.UserId}`, 10, yPosition + 5);
-                    yPosition += 10;
+                )
+                .then((res) => {
+                    alert("Backup successful");
+                    setCopiedLink(res.data.fileUrl);
+                setIsCopied(true);
+                })
+                .catch((error) => {
+                    console.error("Error uploading PDF:", error);
                 });
-            };
-
-            addReviewsToPdf("Positive Reviews", positiveSearchResult);
-            addReviewsToPdf("Negative Reviews", negativeSearchResult);
-            addReviewsToPdf("Neutral Reviews", neutralSearchResult);
-
-            
-            const pdfBlob = doc.output('blob');
-            const pdfUrl = URL.createObjectURL(pdfBlob);
-            setCopiedLink(pdfUrl);
-            setIsCopied(true);
-            window.open(pdfUrl);
-
-            const formData = new FormData();
-            formData.append("reviews", pdfBlob, "reviews.pdf");
-
-            axios.post(
-                `http://localhost:4003/api/reviews/addFile/${localStorage.getItem("userId")}`,
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            )
-            .then(() => {
-                alert("Backup successful");
-            })
-            .catch((error) => {
-                console.error("Error uploading PDF:", error);
             });
         });
     };
+    
 
     const handleCopy = () => {
         navigator.clipboard.writeText(copiedLink);

@@ -174,6 +174,7 @@ async function addFile(req, res) {
         });
         await user.save();
 
+        console.log({fileUrl: response.Location, updatedNegativeReviewsCount: user.negativeReviewsCount});
         return res.status(200).json({
             message: "File uploaded, negative reviews count updated, and review URL added successfully",
             fileUrl: response.Location,
