@@ -180,7 +180,7 @@ const [sentimentData, setSentimentData] = useState({});
     
                 // Add sentiment data (positive, negative, neutral) in the PDF
                 doc.setFontSize(12);
-                doc.text("Product Sentiment Distribution", 10, 220);
+                doc.text("", 10, 220);
     
                 const addReviewsToPdf = (title, reviews) => {
                     doc.addPage();
