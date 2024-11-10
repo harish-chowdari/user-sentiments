@@ -45,6 +45,7 @@ const ReviewAnalysis = () => {
             );
 
             if (response && response.data && response.data.reviews) {
+                console.log(response.data.reviews.product_sentiment_counts);
                 setReviewData(response.data.reviews.reviews);
                 setPieChartData(response.data.reviews.sentiment_counts);
                 setReviewsCount(response.data.reviews.total_reviews);
@@ -261,11 +262,16 @@ const ReviewAnalysis = () => {
                         </div>
                     </div>
                 </div>
-
+            
+            <div className={styles.pieChartSection}>
                 <div className={styles.pieChart} ref={chartRef}>
                     {pieData && <Pie data={pieData} />}
                 </div>
 
+                <div className={styles.pieChart} ref={chartRef}>
+                            xfjbh
+                </div>
+</div>
             </>
 )}
         </div>
