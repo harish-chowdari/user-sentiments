@@ -11,6 +11,45 @@
   color: #333;
 }
 
+.neutralReviews input {
+  width: 95%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.neutralReviews input:focus {
+  border-color: #007bff;
+}
+
+.positiveReviews input {
+  width: 95%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.positiveReviews input:focus {
+  border-color: #007bff;
+}
+
+.negativeReviews input {
+  width: 95%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.negativeReviews input:focus {
+  border-color: #007bff;
+}
+
 .reviewAnalysis.darkMode {
   background-color: #333;
   color: #f5f5f5;
