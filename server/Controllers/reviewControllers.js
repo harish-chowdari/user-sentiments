@@ -3,7 +3,8 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const Sentiment = require('sentiment');
 const sentiment = new Sentiment();
-
+const userDetails = require('../Models/AuthenticationModel');
+const S3  = require("../s3");
 
 // function analyzeReviews(req, res){
 //     const reviewsFilePath = req?.files?.reviews[0]?.path; // Path to the uploaded reviews file
@@ -104,6 +105,85 @@ function analyzeReviews(req, res){
 
 
 
+// utils/sendMail.js
+
+const nodemailer = require('nodemailer');
+
+const sendMail = async (email, message) => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER, // sender's email address
+            pass: process.env.EMAIL_PASSWORD // sender's email password
+        }
+    });
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Negative Review Count Limit Reached',
+        text: message
+    };
+
+    await transporter.sendMail(mailOptions);
+};
+
+
+
+async function addFile(req, res) {
+    try {
+        if (!req.files || !req.files.reviews) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        const response = await S3.uploadFile(
+            process.env.AWS_BUCKET_NAME,
+            req.files.reviews[0]
+        );
+
+        const { userId } = req.params;
+        const additionalNegativeCount = parseInt(req.body.negativeReviewsCount, 10) || 0;
+
+        const user = await userDetails.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User does not exist" });
+        }
+
+        // Update negative reviews count
+        user.negativeReviewsCount += additionalNegativeCount;
+
+        // Check if email should be sent based on count and limit, and if email hasn’t already been sent
+        if (user.negativeReviewsCount >= user.negativeReviewsLimit && !user.mailSent) {
+            const emailContent = `
+                Dear ${user.firstName},
+                Your negative review count has reached the limit of ${user.negativeReviewsLimit}.
+                Please review your account accordingly.
+            `;
+            await sendMail(user.email, emailContent);
+            console.log(`Email sent to ${user.email}`);
+
+            // Set mailSent to true to avoid sending multiple emails
+            user.mailSent = true;
+        }
+
+        user.reviews.push(response.Location);
+
+        await user.save();
+
+        return res.status(200).json({
+            message: "File uploaded, negative reviews count updated, and review URL added successfully",
+            fileUrl: response.Location,
+            updatedNegativeReviewsCount: user.negativeReviewsCount
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
+
 module.exports = {
-    analyzeReviews
+    analyzeReviews,
+    addFile
 };

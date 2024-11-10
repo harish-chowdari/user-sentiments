@@ -35,6 +35,7 @@ const Signup = () => {
       } else {
         const userId = res.data._id;
         navigate(`/home/${userId}`);
+        localStorage.setItem("userId", userId);
       }
     } catch (error) {
       console.log(error);

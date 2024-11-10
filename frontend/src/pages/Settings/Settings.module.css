@@ -1,0 +1,96 @@
+.settings {
+    background-color: #f7f9fc;
+    border-radius: 8px;
+    padding: 20px;
+    width: 50vw;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .settingsHeader {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .settingsHeader h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .settingsHeader p {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .settingsWrapper {
+    margin-bottom: 20px;
+  }
+  
+  .settingsWrapper label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+  .settingsWrapper p {
+    font-size: 16px;
+    color: #555;
+    margin-top: 5px;
+  }
+  
+  .inputField {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 8px;
+    box-sizing: border-box;
+    background-color: #fff;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .inputField:focus {
+    border-color: #0066cc;
+    outline: none;
+  }
+  
+  .buttons {
+    text-align: center;
+  }
+  
+  .editButton,
+  .saveButton {
+    background-color: #0066cc;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .editButton:hover,
+  .saveButton:hover {
+    background-color: #004d99;
+  }
+  
+  .editButton:disabled,
+  .saveButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .settingsContainer{
+    display: flex;
+    gap: 50px;
+  }
+  

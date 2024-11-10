@@ -8,9 +8,7 @@ const UserSchema = new mongoose.Schema({
         type: String
     },
     email: {
-        type: String,
-        required: true,
-        unique: true
+        type: String
     },
     mobile: {
         type: String
@@ -26,7 +24,25 @@ const UserSchema = new mongoose.Schema({
     },
     otpExpiresAt: {
         type: Date
+    },
+    
+    reviews: [{
+        type: String
+    }],
+
+    negativeReviewsLimit:{
+        type: Number,
+        default: 100
+    },
+    negativeReviewsCount: {
+        type: Number,
+        default: 0
+    },
+    mailSent: {
+        type: Boolean,
+        default: false
     }
+    
 }, {timestamps: true});
 
 module.exports = mongoose.model("User", UserSchema);
