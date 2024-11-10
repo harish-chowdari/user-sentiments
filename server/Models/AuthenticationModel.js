@@ -27,9 +27,14 @@ const UserSchema = new mongoose.Schema({
     },
     
     reviews: [{
-        type: String
-    }],
-
+        url:{
+            type: String
+        },
+        date:{
+            type: Date
+        }
+    }
+],
     negativeReviewsLimit:{
         type: Number,
         default: 100

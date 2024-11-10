@@ -63,8 +63,10 @@ function analyzeReviews(req, res){
     fs.createReadStream(reviewsFilePath)
         .pipe(csv())
         .on('data', (data) => {
+            console.log(data);
             // Ensure required columns are present
             if (!data['ProductId'] || !data['Summary'] || !data['UserId']) {
+                console.log("Missing required columns");
                 res.status(400).json({ error: "Dataset is missing required columns ('ProductId', 'Summary', or 'UserId')." });
                 return;
             }
@@ -87,16 +89,16 @@ function analyzeReviews(req, res){
                 UserId: data['UserId'],
                 ProductId: data['ProductId'],
                 Summary: data['Summary'],
-                Sentiment_Label: sentimentLabel
+                Sentiment_Label: sentimentLabel 
             });
         })
         .on('end', () => {
-            res.json({
+            res.json({reviews:{
                 total_reviews: results.length,
                 sentiment_counts: sentimentCounts,
                 product_sentiment_counts: productSentimentCounts,
-                reviews: results
-            });
+                reviews: results 
+            }});
         })
         .on('error', (err) => {
             res.status(500).json({ error: 'Error reading the CSV file.' });
@@ -166,8 +168,10 @@ async function addFile(req, res) {
             user.mailSent = true;
         }
 
-        user.reviews.push(response.Location);
-
+        user.reviews.push({
+            url: response.Location,
+            date: Date.now() // Adds the current date when the review is uploaded
+        });
         await user.save();
 
         return res.status(200).json({

@@ -8,18 +8,17 @@ import html2canvas from "html2canvas";
 import styles from "./ReviewAnalysis.module.css";
 
 const ReviewAnalysis = () => {
+    const [copiedLink, setCopiedLink] = useState("");
+    const [isCopied, setIsCopied] = useState(false);
     const [file, setFile] = useState(null);
     const [reviewData, setReviewData] = useState([]);
     const [pieChartData, setPieChartData] = useState(null);
     const [reviewsCount, setReviewsCount] = useState(0);
-    const [negativeReviewsCount, setNegativeReviewsCount] = useState(0);
     const [theme, setTheme] = useState("light");
     const [postiveSearchTerm, setPostiveSearchTerm] = useState("");
     const [positiveSearchResult, setPostiveSearchResult] = useState([]);
-
     const [negativeSearchTerm, setNegativeSearchTerm] = useState("");
     const [negativeSearchResult, setNegativeSearchResult] = useState([]);
-
     const [neutralSearchTerm, setNeutralSearchTerm] = useState("");
     const [neutralSearchResult, setNeutralSearchResult] = useState([]);
     const chartRef = useRef(null);
@@ -45,10 +44,10 @@ const ReviewAnalysis = () => {
                 }
             );
 
-            if (response && response.data) {
-                setReviewData(response.data.results.reviews);
-                setPieChartData(response.data.results.sentiment_counts);
-                setReviewsCount(response.data.results.total_reviews);
+            if (response && response.data && response.data.reviews) {
+                setReviewData(response.data.reviews.reviews);
+                setPieChartData(response.data.reviews.sentiment_counts);
+                setReviewsCount(response.data.reviews.total_reviews);
             }
         } catch (error) {
             console.error("Error uploading file:", error);
@@ -78,7 +77,6 @@ const ReviewAnalysis = () => {
         (review) => review.Sentiment_Label === "Neutral"
     );
 
-    // Update search results based on search term
     useEffect(() => {
         setPostiveSearchResult(
             positiveReviews.filter((review) =>
@@ -101,7 +99,7 @@ const ReviewAnalysis = () => {
                 review.Summary.toLowerCase().includes(neutralSearchTerm.toLowerCase())
             )
         );
-    }, [ neutralReviews]);
+    }, [ neutralSearchTerm, neutralReviews]);
 
     const generatePdf = () => {
         const doc = new jsPDF();
@@ -143,10 +141,14 @@ const ReviewAnalysis = () => {
             addReviewsToPdf("Neutral Reviews", neutralReviews);
 
             const pdfBlob = doc.output('blob');
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            setCopiedLink(pdfUrl);
+            setIsCopied(true);
+            window.open(pdfUrl);
+
             const formData = new FormData();
             formData.append("reviews", pdfBlob, "reviews.pdf");
             formData.append("negativeReviewsCount", negativeReviews.length);
-
 
             axios.post(
                 `http://localhost:4003/api/reviews/addFile/${localStorage.getItem("userId")}`,
@@ -164,6 +166,11 @@ const ReviewAnalysis = () => {
                 console.error("Error uploading PDF:", error);
             });
         });
+    };
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(copiedLink);
+        alert("Link copied to clipboard");
     };
 
     return (
@@ -196,6 +203,10 @@ const ReviewAnalysis = () => {
                     >
                         {theme === "light" ? <FaMoon size={15} /> : <FaSun size={15} />}
                     </button>
+                    { isCopied && <button onClick={handleCopy} className={`${styles.shareButton} ${styles[`${theme}Button`]}`}>Share </button>}
+
+
+                    
                 </div>
 
                 <div className={styles.sentimentSections}>
@@ -232,7 +243,6 @@ const ReviewAnalysis = () => {
                             </div>
                         ))}
                     </div>
-
                     <div className={`${styles.negativeReviews} ${styles[`${theme}Section`]}`}>
                         <h4 className={styles.heading}>Negative Reviews</h4>
                         <input
@@ -241,25 +251,23 @@ const ReviewAnalysis = () => {
                             onChange={(e) => setNegativeSearchTerm(e.target.value)}
                             placeholder="Search reviews..."
                         />
-                        {negativeSearchResult.map((review, index) => (
-                            <div key={index} className={`${styles.review} ${styles[`${theme}Review`]}`}>
-                                <p><strong>Review:</strong> {review.Summary}</p>
-                                <p><strong>User ID:</strong> {review.UserId}</p>
-                            </div>
-                        ))}
+                        <div className={styles.searchResults}>
+                            {negativeSearchResult.map((review, index) => (
+                                <div key={index} className={styles.searchResult}>
+                                    <p><strong>Review:</strong> {review.Summary}</p>
+                                    <p><strong>User ID:</strong> {review.UserId}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                <div className={styles.pieChartSection}>
-                    {pieData && (
-                        <div className={styles.pieChart} ref={chartRef}>
-                            <h4 className={styles.heading}>Sentiment Distribution</h4>
-                            <Pie data={pieData} width={300} height={300} />
-                        </div>
-                    )}
+                <div className={styles.pieChart} ref={chartRef}>
+                    {pieData && <Pie data={pieData} />}
                 </div>
-            </> 
-            )}
+
+            </>
+)}
         </div>
     );
 };
