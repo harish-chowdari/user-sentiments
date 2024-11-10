@@ -19,6 +19,7 @@ const [sentimentData, setSentimentData] = useState({});
     const [isCopied, setIsCopied] = useState(false);
     const [file, setFile] = useState(null);
     const [reviewData, setReviewData] = useState([]);
+    const [negativeReviewsCount, setNegativeReviewsCount] = useState(0);
     const [pieChartData, setPieChartData] = useState(null);
     const [barChartData, setBarChartData] = useState(null);
     const [reviewsCount, setReviewsCount] = useState(0);
@@ -154,6 +155,10 @@ const [sentimentData, setSentimentData] = useState({});
         );
     }, [postiveSearchTerm, negativeSearchTerm, neutralSearchTerm, reviewData]);
 
+    const negativeReviews = reviewData.filter(
+        (review) => review.Sentiment_Label === "Negative"
+    );
+    
     const generatePdf = () => {
         const doc = new jsPDF();
         
@@ -211,7 +216,7 @@ const [sentimentData, setSentimentData] = useState({});
     
                 const formData = new FormData();
                 formData.append("reviews", pdfBlob, "reviews.pdf");
-    
+                formData.append("negativeReviewsCount", negativeReviews.length);
                 axios.post(
                     `http://localhost:4003/api/reviews/addFile/${localStorage.getItem("userId")}`,
                     formData,
@@ -224,6 +229,7 @@ const [sentimentData, setSentimentData] = useState({});
                 .then((res) => {
                     alert("Backup successful");
                     setCopiedLink(res.data.fileUrl);
+                    
                 setIsCopied(true);
                 })
                 .catch((error) => {
