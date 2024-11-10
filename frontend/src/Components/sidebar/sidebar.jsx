@@ -44,6 +44,15 @@ const Sidebar = () => {
       </NavLink>
 
       <NavLink
+      
+        to={`/home/${userId}/files`}
+        className={({ isActive }) => `${Styles.link} ${isActive ? Styles.activeLink : ''}`}
+        style={{ color: "#FFFFFF" }} 
+      >
+        Files History
+      </NavLink>
+
+      <NavLink
         onClick={handleDelete}
         className={Styles.link}
         style={{ color: "#FFFFFF", cursor: "pointer" }}

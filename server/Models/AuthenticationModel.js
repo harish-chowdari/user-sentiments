@@ -8,9 +8,7 @@ const UserSchema = new mongoose.Schema({
         type: String
     },
     email: {
-        type: String,
-        required: true,
-        unique: true
+        type: String
     },
     mobile: {
         type: String
@@ -26,7 +24,12 @@ const UserSchema = new mongoose.Schema({
     },
     otpExpiresAt: {
         type: Date
-    }
+    },
+    
+    reviews: [{
+        type: String
+    }]
+    
 }, {timestamps: true});
 
 module.exports = mongoose.model("User", UserSchema);

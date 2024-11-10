@@ -7,6 +7,7 @@ import Home from "./Components/Home/Home";
 import Layout from "./layout/Layout";
 import Settings from "./pages/Settings/Settings";
 import ReviewAnalysis from "./pages/ReviewAnalysis/ReviewAnalysis";
+import UserCsvFiles from "./pages/UserCsvFiles/UserCsvFiles";
 
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="review-analysis" element={<ReviewAnalysis />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="files" element={<UserCsvFiles />} />
         </Route>  
         
       </Routes>

@@ -37,6 +37,15 @@ const ReviewAnalysis = () => {
                 setReviewData(response.data.results.reviews);
                 setPieChartData(response.data.results.sentiment_counts);
                 setReviewsCount(response.data.results.total_reviews);
+                const res = await axios.post("http://localhost:4003/api/reviews/addFile/"+localStorage.getItem("userId"), formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+                
+            )
+            console.log(res.data);
             }
         } catch (error) {
             console.error("Error uploading file:", error);
