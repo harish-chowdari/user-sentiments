@@ -1,12 +1,32 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import Styles from './sidebar.module.css'
+import React from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import Styles from './sidebar.module.css';
+import axios from 'axios';
 
 const Sidebar = () => {
     const userId = localStorage.getItem('userId');
-  return (
-    <div className={Styles.sidebar} >
+    const navigate = useNavigate();
 
+    const handleDelete = async () => {
+      const confirmDelete = window.confirm("Are you sure you want to delete your account?");
+      if (!confirmDelete) return;
+
+      try {
+        const res = await axios.delete(`http://localhost:4003/api/delete-user/${userId}`);
+        
+        if (res.data && res.data.userDeleted) {
+          alert(res.data.userDeleted);
+          localStorage.removeItem('userId');
+          navigate('/'); 
+        }
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        alert('Failed to delete account. Please try again later.');
+      }
+    };
+
+  return (
+    <div className={Styles.sidebar}>
       <NavLink
         to={`/home/${userId}/review-analysis`}
         className={({ isActive }) => `${Styles.link} ${isActive ? Styles.activeLink : ''}`}
@@ -24,19 +44,25 @@ const Sidebar = () => {
       </NavLink>
 
       <NavLink
+        onClick={handleDelete}
+        className={Styles.link}
+        style={{ color: "#FFFFFF", cursor: "pointer" }}
+      >
+        Delete Account
+      </NavLink>
+
+      <NavLink
         to={'/'}
         onClick={() => {
           localStorage.removeItem('userId');
         }}
         className={({ isActive }) => `${Styles.link} ${isActive ? Styles.activeLink : ''}`}
-        style={{ color: "#FFFFFF" }} 
+        style={{ color: "#FFFFFF" }}
       >
          Logout
       </NavLink>
-
-     
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

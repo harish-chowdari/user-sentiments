@@ -52,9 +52,9 @@ const Settings = () => {
       );
       
       if (res.data.AlreadyExist) {
-        alert(res.data.AlreadyExist); // Show alert if email already exists
+        alert(res.data.AlreadyExist); 
       } else {
-        setUserData(res.data.user); // Update the user data in state
+        setUserData(res.data.user); 
         setIsEditing(false);
       }
     } catch (error) {

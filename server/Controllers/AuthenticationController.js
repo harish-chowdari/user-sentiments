@@ -110,9 +110,25 @@ async function editUser(req, res) {
 }
 
 
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await Schema.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(200).json({ userNotExist: "User does not exist" });
+    }
+    console.log({userDeleted: "User deleted successfully"});
+    return res.json({userDeleted: "User deleted successfully"});
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
 module.exports = {
   SigUp,
   Login,
   getUserById,
-  editUser
+  editUser,
+  deleteUser
 }
