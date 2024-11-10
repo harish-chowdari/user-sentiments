@@ -3,14 +3,14 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const Sentiment = require('sentiment');
 const sentiment = new Sentiment();
-const userDetails = require('../Models/AuthenticationModel');
+const userDetails = require('../Models/AuthenticationModel'); 
 const S3  = require("../s3");
 
 function analyzeReviews(req, res){
     const reviewsFilePath = req?.files?.reviews[0]?.path; // Path to the uploaded reviews file
     let results = [];
     let sentimentCounts = {
-        Positive: 0,
+        Positive: 0, 
         Negative: 0,
         Neutral: 0
     };
@@ -57,7 +57,7 @@ async function addFile(req, res) {
     try {
         // Check if files are uploaded
         if (!req.files || !req.files.reviews) {
-            return res.status(400).json({ error: 'No file uploaded' });
+            return res.status(200).json({ error: 'No file uploaded' });
         }
 
         // Upload the file to S3
@@ -70,9 +70,9 @@ async function addFile(req, res) {
         const { userId } = req.params;
 
         // Find the user by userId
-        const user = await userDetails.findById(userId);
+        const user = await userDetails.findById(userId);  
         if (!user) {
-            return res.status(404).json({ error: "User does not exist" });
+            return res.status(200).json({ error: "User does not exist" });
         }
 
         // Push the new file URL to the reviews array
@@ -81,6 +81,7 @@ async function addFile(req, res) {
         // Save the updated user document
         await user.save();
 
+        console.log(user.reviews);
         // Return a success response
         return res.status(200).json({
             message: "File uploaded and review URL added successfully",

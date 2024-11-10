@@ -49,7 +49,7 @@ const Sidebar = () => {
         className={({ isActive }) => `${Styles.link} ${isActive ? Styles.activeLink : ''}`}
         style={{ color: "#FFFFFF" }} 
       >
-        Files History
+        Reviews Backup
       </NavLink>
 
       <NavLink
