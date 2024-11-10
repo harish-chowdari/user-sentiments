@@ -10,6 +10,9 @@ const Settings = () => {
     lastName: '',
     email: '',
     mobile: '',
+    negativeReviewsLimit: 0,
+    mailSent: false,
+
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,11 +60,11 @@ const Settings = () => {
         setUserData(res.data.user); 
         setIsEditing(false);
       }
+      console.log(res.data);
     } catch (error) {
       console.error('Error updating user data:', error);
     }
   };
-  
 
   const handleEditToggle = () => {
     setIsEditing((prev) => !prev);
@@ -89,22 +92,155 @@ const Settings = () => {
 
       {userData && (
         <>
-          {['firstName', 'lastName', 'email', 'mobile'].map((field) => (
-            <div className={styles.settingsWrapper} key={field}>
-              <label>{field.charAt(0).toUpperCase() + field.slice(1).replace('Name', ' Name')}</label>
-              {isEditing ? (
-                <input
-                  type={field === 'email' ? 'email' : 'text'}
-                  name={field}
-                  value={updatedUserData[field]}
-                  onChange={handleInputChange}
-                  className={styles.inputField}
-                />
-              ) : (
-                <p>{userData[field]}</p>
-              )}
-            </div>
-          ))}
+        <div className={styles.settingsContainer}>
+        <div className={styles.settingsContainer1}>
+          <div className={styles.settingsWrapper}>
+            <label>First Name</label>
+            {isEditing ? (
+              <input
+                type="text"
+                name="firstName"
+                value={updatedUserData.firstName}
+                onChange={handleInputChange}
+                className={styles.inputField}
+              />
+            ) : (
+              <input
+                type="text"
+                name="firstName"
+                value={updatedUserData.firstName}
+                onChange={handleInputChange}
+                className={styles.inputField}
+                disabled
+                style={{ cursor: 'not-allowed' }}
+              />
+            )}
+          </div>
+
+          <div className={styles.settingsWrapper}>
+            <label>Last Name</label>
+            {isEditing ? (
+              <input
+                type="text"
+                name="lastName"
+                value={updatedUserData.lastName}
+                onChange={handleInputChange}
+                className={styles.inputField}
+              />
+            ) : (
+              <input
+                type="text"
+                name="lastName"
+                value={updatedUserData.lastName}
+                onChange={handleInputChange}
+                className={styles.inputField}
+                disabled
+                style={{ cursor: 'not-allowed' }}
+              />
+            )}
+          </div>
+
+          <div className={styles.settingsWrapper}>
+            <label>Email</label>
+            {isEditing ? (
+              <input
+                type="email"
+                name="email"
+                value={updatedUserData.email}
+                onChange={handleInputChange}
+                className={styles.inputField}
+              />
+            ) : (
+              <input
+                type="email"
+                name="email"
+                value={updatedUserData.email}
+                onChange={handleInputChange}
+                className={styles.inputField}
+                disabled
+                style={{ cursor: 'not-allowed' }}
+              />
+            )}
+          </div>
+
+          </div>
+          
+          <div className={styles.settingsContainer2}>
+          <div className={styles.settingsWrapper}>
+            <label>Mobile</label>
+            {isEditing ? (
+              <input
+                type="text"
+                name="mobile"
+                value={updatedUserData.mobile}
+                onChange={handleInputChange}
+                className={styles.inputField}
+              />
+            ) : (
+              <input
+                type="text"
+                name="mobile"
+                value={updatedUserData.mobile}
+                onChange={handleInputChange}
+                className={styles.inputField}
+                disabled
+                style={{ cursor: 'not-allowed' }}
+              />
+            )}
+          </div>
+
+          <div className={styles.settingsWrapper}>
+            <label>Negative Reviews Limit</label>
+            {isEditing ? (
+              <input
+                type="number"
+                min={1}
+                name="negativeReviewsLimit"
+                value={updatedUserData.negativeReviewsLimit}
+                onChange={handleInputChange}
+                className={styles.inputField}
+              />
+            ) : (
+              <input
+                type="number"
+                name="negativeReviewsLimit"
+                
+                value={updatedUserData.negativeReviewsLimit}
+                onChange={handleInputChange}
+                className={styles.inputField}
+                disabled
+                style={{ cursor: 'not-allowed' }}
+              />
+            )}
+          </div>
+
+          <div className={styles.settingsWrapper}>
+            <label>Negative Reviews Count</label>
+            {isEditing ? (
+              <input
+                type="number"
+                name=" negativeReviewsCount"
+                value={updatedUserData.negativeReviewsCount}
+                onChange={handleInputChange}
+                className={styles.inputField}
+                disabled
+                style={{ cursor: 'not-allowed' }}
+              />
+            ) : (
+              <input
+                type="number"
+                name=" negativeReviewsCount"
+                value={updatedUserData.negativeReviewsCount}
+                onChange={handleInputChange}
+                className={styles.inputField}
+                disabled
+                style={{ cursor: 'not-allowed' }}
+              />
+            )}
+          </div>
+
+          </div>
+          </div>
 
           <div className={styles.buttons}>
             <button onClick={isEditing ? handleSave : handleEditToggle} className={isEditing ? styles.saveButton : styles.editButton}>

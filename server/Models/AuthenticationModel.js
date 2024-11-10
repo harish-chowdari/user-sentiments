@@ -28,7 +28,20 @@ const UserSchema = new mongoose.Schema({
     
     reviews: [{
         type: String
-    }]
+    }],
+
+    negativeReviewsLimit:{
+        type: Number,
+        default: 100
+    },
+    negativeReviewsCount: {
+        type: Number,
+        default: 0
+    },
+    mailSent: {
+        type: Boolean,
+        default: false
+    }
     
 }, {timestamps: true});
 

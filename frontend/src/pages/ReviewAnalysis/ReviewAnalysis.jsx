@@ -12,6 +12,7 @@ const ReviewAnalysis = () => {
     const [reviewData, setReviewData] = useState([]);
     const [pieChartData, setPieChartData] = useState(null);
     const [reviewsCount, setReviewsCount] = useState(0);
+    const [negativeReviewsCount, setNegativeReviewsCount] = useState(0);
     const [theme, setTheme] = useState("light");
     const [postiveSearchTerm, setPostiveSearchTerm] = useState("");
     const [positiveSearchResult, setPostiveSearchResult] = useState([]);
@@ -144,6 +145,8 @@ const ReviewAnalysis = () => {
             const pdfBlob = doc.output('blob');
             const formData = new FormData();
             formData.append("reviews", pdfBlob, "reviews.pdf");
+            formData.append("negativeReviewsCount", negativeReviews.length);
+
 
             axios.post(
                 `http://localhost:4003/api/reviews/addFile/${localStorage.getItem("userId")}`,
@@ -181,7 +184,7 @@ const ReviewAnalysis = () => {
                     </button>
                 </div>
             )}
-
+{ reviewData.length > 0 && (
             <>
                 <div className={styles.buttons}>
                     <button onClick={generatePdf} className={`${styles.genButton} ${styles[`${theme}Button`]}`}>
@@ -255,7 +258,8 @@ const ReviewAnalysis = () => {
                         </div>
                     )}
                 </div>
-            </>
+            </> 
+            )}
         </div>
     );
 };

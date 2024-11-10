@@ -96,6 +96,10 @@ async function editUser(req, res) {
     user.lastName = lastName;
     user.email = email;
     user.mobile = mobile;
+    user.negativeReviewsLimit = req.body.negativeReviewsLimit;
+    if(req.body.negativeReviewsLimit !== user.negativeReviewsLimit) {
+      user.mailSent = false;
+    }
 
     // Save the updated user data
     const updatedUser = await user.save();
